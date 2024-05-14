@@ -3,20 +3,21 @@
 namespace Kinglozzer\SilverstripePicture;
 
 use SilverStripe\Assets\Image;
+use SilverStripe\Assets\Storage\DBFile;
 
 trait SrcsetProviderTrait
 {
     /**
      * The source Silverstripe image for the picture
      */
-    protected Image $sourceImage;
+    protected DBFile $sourceImage;
 
     /**
      * A list of image candidates for the srcset attribute
      */
     protected array $imageCandidates = [];
 
-    public function __construct(Image $sourceImage, array $candidatesConfig)
+    public function __construct(DBFile $sourceImage, array $candidatesConfig)
     {
         $this->sourceImage = $sourceImage;
         $this->prepareImageCandidates($candidatesConfig);
@@ -41,7 +42,7 @@ trait SrcsetProviderTrait
         return $clone;
     }
 
-    public function getSourceImage(): Image
+    public function getSourceImage(): DBFile
     {
         return $this->sourceImage;
     }
@@ -73,16 +74,28 @@ trait SrcsetProviderTrait
             $descriptor = $config['descriptor'] ?? '';
             $image = $this->sourceImage;
             foreach ($manipulations as $manipulation) {
+                // Skip manipulations with no method. Render the image as is
+                if ($manipulation['method'] === 'noop') {
+                    continue;
+                }
                 $method = $manipulation['method'];
                 $arguments = $manipulation['arguments'] ?? [];
                 $image = $image->$method(...$arguments);
+                // If the method doesn't return an image, break out of the loop
+                if (empty($image)) {
+                    break;
+                }
             }
 
-            $this->imageCandidates[] = [
-                'manipulations' => $manipulations,
-                'image' => $image,
-                'descriptor' => $descriptor
-            ];
+            // If we have a valid image, add it to the candidates
+            // If at any point we failed to generate an image, we'll just skip this candidate
+            if (!empty($image)) {
+                $this->imageCandidates[] = [
+                    'manipulations' => $manipulations,
+                    'image' => $image,
+                    'descriptor' => $descriptor
+                ];
+            }
         }
     }
 

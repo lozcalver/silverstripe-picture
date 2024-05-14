@@ -4,6 +4,7 @@ namespace Kinglozzer\SilverstripePicture;
 
 use SilverStripe\Assets\Image;
 use SilverStripe\Assets\Storage\AssetContainer;
+use SilverStripe\Assets\Storage\DBFile;
 use SilverStripe\View\HTML;
 use SilverStripe\View\ViewableData;
 
@@ -17,14 +18,14 @@ class Img extends ViewableData
     /**
      * The default image for this <picture> element, to be rendered as a nested <img /> tag
      */
-    protected Image $defaultImage;
+    protected Image|DBFile $defaultImage;
 
     /**
      * A store of any manipulations performed on the default image
      */
     protected array $defaultImageManipulations = [];
 
-    public function __construct(Image $sourceImage, array $config)
+    public function __construct(Image|DBFile $sourceImage, array $config)
     {
         parent::__construct();
         $this->__srcsetProviderConstruct($sourceImage, $config);
@@ -65,7 +66,7 @@ class Img extends ViewableData
         return $attributes;
     }
 
-    public function getDefaultImage(): Image
+    public function getDefaultImage(): Image|DBFile
     {
         return $this->defaultImage;
     }

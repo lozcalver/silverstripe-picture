@@ -3,7 +3,11 @@
 namespace Kinglozzer\SilverstripePicture;
 
 use Exception;
+use InvalidArgumentException;
 use SilverStripe\Assets\Image;
+use SilverStripe\Assets\Storage\DBFile;
+use SilverStripe\Core\Injector\Factory;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\ViewableData;
@@ -18,7 +22,7 @@ class Picture extends ViewableData
     /**
      * The underlying Silverstripe image
      */
-    protected Image $image;
+    protected DBFile $image;
 
     /**
      * The requested picture style
@@ -30,7 +34,7 @@ class Picture extends ViewableData
      */
     protected ?array $styleConfig;
 
-    public function __construct(Image $image, string $style)
+    public function __construct(DBFile $image, string $style)
     {
         parent::__construct();
 
@@ -46,7 +50,7 @@ class Picture extends ViewableData
         return $this->renderWith(__CLASS__);
     }
 
-    public function getSourceImage(): Image
+    public function getSourceImage(): DBFile
     {
         return $this->image;
     }
@@ -56,7 +60,7 @@ class Picture extends ViewableData
      */
     public function getDefaultImage(): Img
     {
-        $defaultConfig = $this->styleConfig['default'] ?? null;
+        $defaultConfig = $this->styleConfig['default'] ?? [];
         if (!$defaultConfig) {
             throw new Exception("No default config set for style “{$this->style}”");
         }
@@ -76,7 +80,15 @@ class Picture extends ViewableData
         }
 
         foreach ($sourcesConfig as $media => $sourceConfig) {
+            if (!is_array($sourceConfig)) {
+                throw new InvalidArgumentException("Invalid source config for style “{$this->style}”");
+            }
+
+            if (is_numeric($media)) {
+                $media = $sourceConfig['media'] ?? '';
+            }
             $source = Source::create($this->image, $media, $sourceConfig);
+
             $sources->push($source);
         }
 

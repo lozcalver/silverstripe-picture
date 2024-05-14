@@ -3,6 +3,7 @@
 namespace Kinglozzer\SilverstripePicture;
 
 use SilverStripe\Assets\Image;
+use SilverStripe\Assets\Storage\DBFile;
 use SilverStripe\View\HTML;
 use SilverStripe\View\ViewableData;
 
@@ -17,7 +18,7 @@ class Source extends ViewableData
      */
     protected string $media;
 
-    public function __construct(Image $sourceImage, string $media, array $config)
+    public function __construct(DBFile $sourceImage, string $media, array $config)
     {
         parent::__construct();
         $this->__srcsetProviderConstruct($sourceImage, $config);
@@ -38,8 +39,6 @@ class Source extends ViewableData
             'media' => $this->media,
             'srcset' => $this->getImageCandidatesString(),
             'type' => $lastImage->getMimeType(),
-            'width' => $firstImage->getWidth(),
-            'height' => $firstImage->getHeight(),
         ];
 
         $this->extend('updateAttributes', $attributes);

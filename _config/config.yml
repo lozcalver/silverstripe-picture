@@ -1,6 +1,29 @@
 ---
 Name: silverstripe-picture
 ---
-SilverStripe\Assets\Image:
+SilverStripe\Assets\Storage\DBFile:
   extensions:
     - Kinglozzer\SilverstripePicture\ImageExtension
+
+Kinglozzer\SilverstripePicture\Picture:
+  styles:
+    DefaultRender:
+      default:
+        - {method: 'noop'}
+        - {method: 'Retina', arguments: ['2x'], descriptor: '2x'}
+        - {method: 'Retina', arguments: ['3x'], descriptor: '3x'}
+      sources:
+        -
+          -
+            manipulations:
+            - {method: 'Convert', arguments: ['webp']}
+          -
+            manipulations:
+            - {method: 'Retina', arguments: ['2x']}
+            - {method: 'Convert', arguments: ['webp']}
+            descriptor: '2x'
+          -
+            manipulations:
+            - {method: 'Retina', arguments: ['3x']}
+            - {method: 'Convert', arguments: ['webp']}
+            descriptor: '3x'
