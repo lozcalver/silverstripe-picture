@@ -4,11 +4,10 @@ namespace Kinglozzer\SilverstripePicture;
 
 use Exception;
 use SilverStripe\Assets\Image;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ModelData;
 
-class Picture extends ViewableData
+class Picture extends ModelData
 {
     /**
      * A config array of available styles to be called in templates
@@ -41,9 +40,9 @@ class Picture extends ViewableData
         $this->styleConfig = $styles[$this->style];
     }
 
-    public function forTemplate(): DBHTMLText
+    public function forTemplate(): string
     {
-        return $this->renderWith(__CLASS__);
+        return (string)$this->renderWith(__CLASS__);
     }
 
     public function getSourceImage(): Image

@@ -3,10 +3,10 @@
 namespace Kinglozzer\SilverstripePicture;
 
 use SilverStripe\Assets\Image;
+use SilverStripe\Model\ModelData;
 use SilverStripe\View\HTML;
-use SilverStripe\View\ViewableData;
 
-class Source extends ViewableData
+class Source extends ModelData
 {
     use SrcsetProviderTrait {
         __construct as __srcsetProviderConstruct;

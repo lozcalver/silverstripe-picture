@@ -10,9 +10,9 @@
         }
     ],
     "require": {
-        "php": "^7.4 || ^8.0",
-        "silverstripe/assets": "^2",
-        "silverstripe/framework": "^5"
+        "php": "^8",
+        "silverstripe/assets": "^3",
+        "silverstripe/framework": "^6"
     },
     "autoload": {
         "psr-4": {
