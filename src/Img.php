@@ -82,15 +82,11 @@ class Img extends ModelData
     {
         $this->extend('onBeforeRender');
 
-        $attributes = $this->getDefaultAttributes();
+        $attributes = array_merge($this->sourceImage->getAttributes(), $this->getDefaultAttributes());
 
         $imageForSrc = $this->getImageForSrc();
-        if (!array_key_exists('width', $attributes)) {
-            $attributes['width'] = $imageForSrc->getWidth();
-        }
-        if (!array_key_exists('height', $attributes)) {
-            $attributes['height'] = $imageForSrc->getHeight();
-        }
+        $attributes['width'] = $imageForSrc->getWidth();
+        $attributes['height'] = $imageForSrc->getHeight();
 
         $this->extend('updateAttributes', $attributes);
 
