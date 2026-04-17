@@ -45,6 +45,11 @@ class Picture extends ModelData
         return (string)$this->renderWith(__CLASS__);
     }
 
+    public function __toString(): string
+    {
+        return $this->forTemplate();
+    }
+
     public function getSourceImage(): Image
     {
         return $this->image;

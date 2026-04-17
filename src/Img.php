@@ -100,4 +100,9 @@ class Img extends ModelData
 
         return $html;
     }
+
+    public function __toString(): string
+    {
+        return $this->forTemplate();
+    }
 }
